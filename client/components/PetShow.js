@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import NewAdoptionForm from './NewAdoptionForm';
 
 const PetShow = (props) => {
   const [pet, setPet] = useState([])
+  const [showForm, setShowForm] = useState(false)
   const petType = props.match.params.petType
   const petId = props.match.params.petId
   
@@ -45,6 +47,43 @@ const PetShow = (props) => {
     if(adoptionStory) {
       adoptionStoryTag = <p><strong>Adoption Story: </strong>{adoptionStory}</p>
     }
+
+    let newAdoptionApplicationForm
+    if(showForm) {
+      newAdoptionApplicationForm = <NewAdoptionForm />
+    }
+
+    const handleAdoptButtonClick = event => {
+      event.preventDefault()
+      setShowForm(true)
+    }
+
+    // const postAdoptionApp = async () => {
+    //   try {
+    //     const response = await fetch('/api/v1/adoption-applications', {
+    //       method: 'POST',
+    //       headers: new Headers({
+    //         'Content-Type': 'application/json'
+    //       }),
+    //       body: JSON.stringify(formPayload)
+    //     })
+    //     if (!response.ok) {
+    //       if(response.status === 422) {
+    //         const body = await response.json()
+    //         return setErrors(body.errors)
+    //       } else {
+    //         const errorMessage = `${response.status} (${response.statusText})`
+    //         const error = new Error(errorMessage)
+    //         throw(error)
+    //       }
+    //     }
+    //     
+    //     setErrors({})
+    //     setSuccessfulSubmission(true)
+    //   } catch(err) {
+    //     console.error(`Error in fetch: ${err.message}`)
+    //   }
+    // }
   
     return (
       <div>
@@ -54,6 +93,8 @@ const PetShow = (props) => {
         <p><strong>Vaccinated?: </strong>{vaccinationStatusText}</p>
         <p><strong>Available For Adoption?: </strong>{availableForAdoptionText}</p>
         {adoptionStoryTag}
+        <button type="button" className="button" onClick={handleAdoptButtonClick}>Adopt Me!</button>
+        {newAdoptionApplicationForm}
       </div>
     )
   }
