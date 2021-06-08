@@ -7,6 +7,7 @@ import "../assets/scss/main.scss"
 import { Route, Switch, BrowserRouter, Redirect } from "react-router-dom"
 
 import PetTypesIndex from "./PetTypesIndex"
+import PetTypeShow from "./PetTypeShow"
 
 const App = props => {
   useEffect(() => {
@@ -19,6 +20,7 @@ const App = props => {
         <Redirect to="/pets" />
       </Route>
       <Route exact path="/pets" component={PetTypesIndex} />
+      <Route exact path="/pets/:petType" component={PetTypeShow} />
     </BrowserRouter>
   )
 }

@@ -1,5 +1,6 @@
 import pg from "pg"
 import PetType from "../models/PetType.js"
+import AdoptablePet from "../models/AdoptablePet.js"
 
 const pool = new pg.Pool({
   connectionString: "postgres://postgres:password@localhost:5432/pets_development" })
@@ -27,6 +28,45 @@ class Seeder {
       const newPetType = new PetType(petTypes[i])
       const persistedPetType = await newPetType.save()
       console.log(`Pet type  ${i+1} seeded: ${persistedPetType}`);
+    }
+
+    const dogType = await PetType.findByType("Dog")
+    const catType = await PetType.findByType("Cat")
+
+    const adoptablePets = [
+      {
+        name: "Rory",
+        imgUrl: "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
+        age: 5,
+        vaccinationStatus: true,
+        availableForAdoption: false,
+        petTypeId: dogType.id
+      },
+      {
+        name: "Finn",
+        imgUrl: "https://images.unsplash.com/photo-1553882809-a4f57e59501d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80",
+        age: 1,
+        vaccinationStatus: false,
+        adoptionStory: "The sweetest little bundle of joy in need of a loving home",
+        availableForAdoption: true,
+        petTypeId: dogType.id
+      }
+      ,
+      {
+        name: "Maisy",
+        imgUrl: "https://images.unsplash.com/photo-1574158622682-e40e69881006?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80",
+        age: 3,
+        vaccinationStatus: true,
+        adoptionStory: "Neighborhood kitten looking for a family",
+        availableForAdoption: true,
+        petTypeId: catType.id
+      }
+    ]
+
+    for(let i = 0; i < adoptablePets.length; i++) {
+      const newAdoptablePet = new AdoptablePet(adoptablePets[i])
+      const persistedAdoptablePet = await newAdoptablePet.save()
+      console.log(`Pet ${i+1} seeded: ${persistedAdoptablePet}`);
     }
   }
 }
