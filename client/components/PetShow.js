@@ -20,6 +20,7 @@ const PetShow = (props) => {
       setPet(petData.pet)
     } catch(err) {
       console.error(`Error in fetch: ${err.message}`)
+      setPet(null)
     }
   }
 
@@ -98,7 +99,7 @@ const PetShow = (props) => {
   return (
     <div>
       {successMessageTag}
-      <img src={imgUrl} width="40%" />
+      <img src={imgUrl} className="pet-image" />
       <h1>{name}</h1>
       <p><strong>Age: </strong>{age}</p>
       <p><strong>Vaccinated?: </strong>{vaccinationStatusText}</p>

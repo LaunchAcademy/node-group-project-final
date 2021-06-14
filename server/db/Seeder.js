@@ -35,7 +35,7 @@ class Seeder {
         imgUrl: "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
         age: 5,
         vaccinationStatus: true,
-        availableForAdoption: false,
+        availableForAdoption: true,
         petTypeId: dogType.id
       },
       {
@@ -44,7 +44,7 @@ class Seeder {
         age: 1,
         vaccinationStatus: false,
         adoptionStory: "The sweetest little bundle of joy in need of a loving home",
-        availableForAdoption: true,
+        availableForAdoption: false,
         petTypeId: dogType.id
       }
       ,

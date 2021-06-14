@@ -19,7 +19,7 @@ const NewSurrenderForm = (props) => {
 
   const validForSubmission = () => {
     const errors = {}
-    const requiredFields = ["name", "imgUrl"]
+    const requiredFields = ["name", "imgUrl", "petTypeId"]
     requiredFields.forEach(field => {
       if(formPayload[field].trim() === "") {
         errors[field] = "is blank"

@@ -78,6 +78,7 @@ So that I can see which pets are available
 Acceptance Criteria
 
 - Create a database table in your `schema.sql` for `pets` with the following fields
+  - id (primary key)
   - name
   - img_url
   - age (optional integer)
@@ -94,7 +95,7 @@ Acceptance Criteria
   - `Vaccination Status`
     - `Yes/no` reflected as a `boolean` in the database
 - The name of each animal type on `/pet-types` should be a link to their respective `/pet-types/:id` index page.
-  - Clicking the picture on `/pet-types` should also link to the index page for that animal type.
+  - Clicking the picture on `/pet-types` should also link to the show page for that animal type.
 
 ### Display Pet Detail
 
@@ -127,6 +128,7 @@ So that I can apply to adopt an adorable animal
 Acceptance Criteria
 
 - Create a database table in your `schema.sql` for `adoption_applications` with the following fields
+  - id (primary key)
   - name
   - phone_number
   - email
@@ -169,7 +171,7 @@ Acceptance Criteria
   - Adoption Story
   - Vaccination Status (check box)
 - The form cannot be submitted if the required fields are not filled out
-  - Optional: validate format `Pet Age`
+  - Optional: validate format of `Age`
 - If the request is successful:
   - A new record should be persisted in the `pets` table with the user's input, via a fetch POST request to `/api/v1/pets`.
   - The user should be redirected to the new added pet's show page.
@@ -187,7 +189,7 @@ So that I don't fall in love with pets who are no longer available
 Acceptance Criteria
 
 - The `/pet-types/:id` page that shows all pets of a specific type should only show pets that are currently available for adoption
-- To do so, add a method `getAvailablePets()` which first queries for all `pets` of a certain type, then filters them based on their `available_for_adoption` status
+- To do so, add a method `getAvailablePets()` which queries for all `pets` of a certain type, with a filter based on their `available_for_adoption` status
 - Update your API endpoint to only provide the data for those filtered pets
 
 ### NavBar
