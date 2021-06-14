@@ -12,7 +12,6 @@ const NewAdoptionForm = (props) => {
     homeStatus: ""
   })
   const [errors, setErrors] = useState({})
-  const [successfulSubmission, setSuccessfulSubmission] = useState(false)
 
   const validForSubmission = () => {
     const errors = {}
@@ -25,8 +24,7 @@ const NewAdoptionForm = (props) => {
     return _.isEmpty(errors)
   }
 
-  const clearForm = event => {
-    event.preventDefault()
+  const clearForm = () => {
     setFormPayload({
       name: "",
       phoneNumber: "",
@@ -39,7 +37,7 @@ const NewAdoptionForm = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault()
     if(validForSubmission()) {
-      // props.postAdoptionApp()
+      props.postAdoptionApp(formPayload)
       clearForm()
     }
   }
@@ -50,13 +48,12 @@ const NewAdoptionForm = (props) => {
       [event.currentTarget.name]: event.currentTarget.value
     })
   }
-  console.log(formPayload);
 
   return (
     <form className="callout" onSubmit={handleSubmit}>
-      <ErrorList errors={errors} />
+      <ErrorList errors={{...errors, ...props.errors}} />
       <div>
-        <label htmlFor="">Name: </label>
+        <label htmlFor="name">Name: </label>
         <input
           name="name"
           id="name"
@@ -67,7 +64,7 @@ const NewAdoptionForm = (props) => {
       </div>
 
       <div>
-        <label htmlFor="">Phone Number: </label>
+        <label htmlFor="phoneNumber">Phone Number: </label>
         <input
           name="phoneNumber"
           id="phoneNumber"
@@ -78,7 +75,7 @@ const NewAdoptionForm = (props) => {
       </div>
 
       <div>
-        <label htmlFor="">Email: </label>
+        <label htmlFor="email">Email: </label>
         <input
           name="email"
           id="email"
