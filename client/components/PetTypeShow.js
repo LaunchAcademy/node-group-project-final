@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-
+import { useLocation } from "react-router-dom"
 import PetTile from "./PetTile"
 
 const PetTypeShow = props => {
+  let location = useLocation();
   const [petType, setPetType] = useState(
     { pets: [] }
   )
@@ -25,7 +26,7 @@ const PetTypeShow = props => {
 
   useEffect(() => {
     fetchPets()
-  }, [])
+  }, [location.pathname])
 
   const petTiles = petType.pets.map(pet => {
     return (
