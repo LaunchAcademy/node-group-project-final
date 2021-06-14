@@ -1,25 +1,21 @@
-import pg from "pg"
 import PetType from "../models/PetType.js"
-import AdoptablePet from "../models/AdoptablePet.js"
-
-const pool = new pg.Pool({
-  connectionString: "postgres://postgres:password@localhost:5432/pets_development" })
+import Pet from "../models/Pet.js"
 
 class Seeder {
   static async seed() {
     const petTypes = [
       {
-        type: "Dog",
+        name: "Dog",
         imgUrl: "https://images.unsplash.com/photo-1601758124277-f0086d5ab050?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1052&q=80",
         description: "Man's Best Friend"
       },
       {
-        type: "Cat",
+        name: "Cat",
         imgUrl: "https://images.unsplash.com/photo-1495360010541-f48722b34f7d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80",
         description: "Cat's Best Friend"
       },
       {
-        type: "Fish",
+        name: "Fish",
         imgUrl: "https://images.unsplash.com/photo-1535591273668-578e31182c4f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80"
       }
     ]
@@ -27,13 +23,13 @@ class Seeder {
     for(let i = 0; i < petTypes.length; i++) {
       const newPetType = new PetType(petTypes[i])
       const persistedPetType = await newPetType.save()
-      console.log(`Pet type  ${i+1} seeded: ${persistedPetType}`);
+      console.log(`Pet type ${i+1} seeded: ${persistedPetType}`);
     }
 
-    const dogType = await PetType.findByType("Dog")
-    const catType = await PetType.findByType("Cat")
+    const dogType = await PetType.findByName("Dog")
+    const catType = await PetType.findByName("Cat")
 
-    const adoptablePets = [
+    const pets = [
       {
         name: "Rory",
         imgUrl: "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
@@ -63,10 +59,10 @@ class Seeder {
       }
     ]
 
-    for(let i = 0; i < adoptablePets.length; i++) {
-      const newAdoptablePet = new AdoptablePet(adoptablePets[i])
-      const persistedAdoptablePet = await newAdoptablePet.save()
-      console.log(`Pet ${i+1} seeded: ${persistedAdoptablePet}`);
+    for(let i = 0; i < pets.length; i++) {
+      const newPet = new Pet(pets[i])
+      const persistedPet = await newPet.save()
+      console.log(`Pet ${i+1} seeded: ${persistedPet}`);
     }
   }
 }

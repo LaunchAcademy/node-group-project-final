@@ -1,7 +1,7 @@
 import React from 'react'
 
 const PetTypeTile = (props) => {
-  const { type, imgUrl, description } = props.petType
+  const { id, name, imgUrl, description } = props.petType
 
   let descriptionTag;
   if(description) {
@@ -10,9 +10,9 @@ const PetTypeTile = (props) => {
 
   return (
     <div>
-      <a href={`/pets/${type}`}>
+      <a href={`/pet-types/${id}`}>
         <img src={imgUrl} width="30%" />
-        <h1>{type}</h1>
+        <h1>{name}</h1>
       </a>
       {descriptionTag}
     </div>

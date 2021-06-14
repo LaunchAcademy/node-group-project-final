@@ -10,7 +10,7 @@ const PetTile = (props) => {
 
   return (
     <div>
-      <a href={`/pets/${props.petType}/${id}`}>
+      <a href={`/pets/${id}`}>
         <img src={imgUrl} width="20%" />
         <h1>{name}</h1>
       </a>
