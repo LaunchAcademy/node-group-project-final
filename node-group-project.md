@@ -57,15 +57,15 @@ Acceptance Criteria:
 
 - Create a database table in your `schema.sql` for `pet_types` with the following fields
   - id (primary key)
-  - type
+  - name
   - img_url
-  - description (optional)
+  - description (optional string)
 - From your command line run `yarn run db:import` to load your schema
 - Add `insert` statements to your `Seeder.js` file to populate the `pet_types` table
-  - From your command line run `yarn run db:seed`
-- Navigating to `/` should redirect to `/pets`
-- When I visit `/pets`, I should see a listing of the different types of animals up for adoption and a description if available
-- There should also be a picture for each type of animal.
+  - From your command line run `yarn run db:seed` to run your Seeder
+- Navigating to `/` should redirect to `/pet-types`
+- When I visit `/pet-types`, I should see a listing of the different types of animals up for adoption and a description if available
+- There should also be a picture for each type of animal displayed using the `img_url` from the database
 
 ### Pets of a Given Type
 
@@ -77,25 +77,24 @@ So that I can see which pets are available
 
 Acceptance Criteria
 
-- Create a database table in your `schema.sql` for `adoptable_pets` with the following fields
+- Create a database table in your `schema.sql` for `pets` with the following fields
   - name
   - img_url
-  - age (optional)
+  - age (optional integer)
   - vaccination_status (boolean, default value of `false`)
   - adoption_story
-  - available_for_adoption (default value of `true`)
+  - available_for_adoption (boolean, default value of `true`)
   - pet_type_id (foreign key for the `pet_types` table)
-- Add `insert` statements to your `Seeder.js` file to populate the `adoptable_pets` table
-  - **HINT: Comment out old insert statements to avoid duplicating data**
-- Visiting `/pets/{specific pet type}` should bring me to a listing of all available pets that belong to that type
+- Add `insert` statements to your `Seeder.js` file to populate the `pets` table
+- Visiting `/pet-types/:id` should bring me to a listing of all available pets that belong to that type
 - Each listing should have the following
   - A small picture of the animal
   - Name
   - Age
   - `Vaccination Status`
     - `Yes/no` reflected as a `boolean` in the database
-- The name of each animal type on `/pets` should be a link to their respective `/pets/{specific pet type}` index page.
-  - Clicking the picture on `/pets` should also link to the index page for that animal type.
+- The name of each animal type on `/pet-types` should be a link to their respective `/pet-types/:id` index page.
+  - Clicking the picture on `/pet-types` should also link to the index page for that animal type.
 
 ### Display Pet Detail
 
@@ -107,8 +106,8 @@ So that I can decide whether I want to apply to adopt them
 
 Acceptance Criteria
 
-- Visiting `/pets/{specific pet type}/:id` should bring me to the show page of a specific animal
-- I can also navigate to `/pets/{specific pet type}/:id` by clicking on a pets name or image on the `/pets/{specific pet type}` index page.
+- Visiting `/pets/:id` should bring me to the show page of a specific animal
+- I can also navigate to `/pets/:id` by clicking on a pet's name or image on the `/pet-types/:id` page.
 - If the id is not found, or does not belong to the specified pet type, I should be see an error message on the page.
 - The animal's picture should be centered on the top of the page
 - Below the animal's picture should be an area listing the information about that animal
@@ -133,8 +132,8 @@ Acceptance Criteria
   - email
   - home_status
   - application_status (default value of `"pending"`)
-  - adoptable_pet_id (FOREIGN KEY for the `adoptable_pets` table)
-- At the bottom of the `/pets/{specific pet type}/:id` page there should be a button that says `Adopt Me!` which will render a form to adopt the specific animal on the same page
+  - pet_id (FOREIGN KEY for the `pets` table)
+- At the bottom of the `/pets/:id` page there should be a button that says `Adopt Me!` which will render a form to adopt the specific animal on the same page
 - The form is only displayed on the `pet show page` after the `Adopt Me!` button has been clicked.
 - The form requires the following information:
   - Name
@@ -143,9 +142,12 @@ Acceptance Criteria
   - Home status (own or rent managed via a dropdown)
 - Form fields have front end validation to ensure they are filled out
   - Optional: validate format for `Phone Number` and `Email`
-- If the request is successful, then the specific pet page should re-render without the form displayed and a message stating `your request is in process.`
-- If the request is not successful, the form should remain displayed on the page
-  - Optional: persist the information the user entered into the form and populate it for them
+- If the request is successful:
+  - The adoption application should be persisted into the database table via a fetch POST request to `/api/v1/pets/:petId/adoption-applications`
+  - The pet show page should re-render without the form displayed, and with a message stating `Your request is in process.`
+- If the request is not successful:
+  - The form should remain displayed on the page
+  - Optional: retain the information the user entered in the form
 
 ### Add a Pet
 
@@ -157,44 +159,35 @@ So that no animal goes without a good home
 
 Acceptance Criteria
 
-- Create a database table in your `schema.sql` for `surrender_applications` with the following fields
-  - name
-  - phone number
-  - email
-  - adoptable_pet_id
-  - status (default `"pending"`)
-- Navigating to `/adoptions/new` displays a form for listing a pet to surrender
-- The form should contain the following fields
+- Navigating to `/pets/new` displays a form for listing a pet to surrender
+- The form should contain the following fields for the pet:
   - Name
-  - Phone Number
-  - Email
-  - Pet Name
-  - Pet Age
+  - Age
   - Pet Type
     - This should be a drop down with options for each of the animal types your site supports
-  - Pet Image
-  - Vaccination Status
+  - Image Url
+  - Adoption Story
+  - Vaccination Status (check box)
 - The form cannot be submitted if the required fields are not filled out
-  - Optional: validate format for `Phone Number`, `Email`, and `Pet Age`
-- If the request is successful, then the page should re-render with a message stating `Your surrender request is in process.`
-  - A new record should be persisted in the `adoptable_pets` table with the pet-related information.
-  - A new record should also be persisted in the `surrender_applications` table, with the contact information and the pet's id.
-    - `surrender_applications` and `adoptable_pets` should have a one-to-one relationship.
-- If an invalid form is submitted, the user should remain on the page and be presented with error messages pertaining to the empty fields.
-  - Optional: persist the information the user entered into the form and populate it for them
+  - Optional: validate format `Pet Age`
+- If the request is successful:
+  - A new record should be persisted in the `pets` table with the user's input, via a fetch POST request to `/api/v1/pets`.
+  - The user should be redirected to the new added pet's show page.
+- If invalid input is submitted, the user should remain on the page and be presented with error messages pertaining to the empty fields.
+  - Optional: retain the information the user entered in the form
 
-### Only View Pets with Accepted Surrender Applications
+### Only View Pets that are Available for Adoption
 
 ```no-highlight
 As a potential pet owner
-I want to only see pets whose surrenders have been accepted
-So that I don't fall in love with pets who are not yet available
+I want to only see pets who are available for adoption
+So that I don't fall in love with pets who are no longer available
 ```
 
 Acceptance Criteria
 
-- The `/pets/{specific pet type}` page that shows all pets of a specific type should only show pets with accepted surrender applications
-- To do so, add a method `getAvailablePets()` which first queries for all `adoptable_pets` of a certain type, then filtering them based on their `surrender_application.status` (make sure they have a related surrender application first!)
+- The `/pet-types/:id` page that shows all pets of a specific type should only show pets that are currently available for adoption
+- To do so, add a method `getAvailablePets()` which first queries for all `pets` of a certain type, then filters them based on their `available_for_adoption` status
 - Update your API endpoint to only provide the data for those filtered pets
 
 ### NavBar
@@ -209,10 +202,10 @@ Acceptance Criteria
 
 - A `NavBar` using `React Router`
   - The `NavBar` contains links to:
-    - The `Landing page`
-    - Each type of animal's `index page`
-    - `List a pet for adoption`
-      - This should be a link to the `/adoptions/new` path.
+    - The `All Pet Types` page
+    - Each pet type's show page
+    - `List a Pet for Adoption`
+      - This should be a link to the `/pets/new` path.
 
 ### Non-Core User Stories
 
@@ -226,28 +219,40 @@ So that I can place a pet in the right home
 
 Acceptance Criteria
 
-- Create a form for an admin (using routes, not authentication) to approve or deny an adoption request
-  - Form submission updates the pending request in the database to `approved` or `denied`
-  - Form submission also updates the `available_for_adoption` on the `adoptable_pets` table
-- The form page should contain all information about pet and applicant
-- Update the specific Animal Index Pages to only display animals who have a `true` available for adoption status
-- Create a new Index page for animals which have been successfully adopted
-  - This should display animals of all types which have an available for adoption status of `false`
+- Create an index page of all adoption applications at `/adoption-applications`
+  - This should display the information about the applicant, as well as the name of the pet
+    - The name of the pet should be a link to the pet's show page
+- Under each application should be an "Approve" and "Deny" button
+  - Clicking the "Approve" button updates the pending request in the database to `approved`, and updates the `available_for_adoption` status on the `pets` table to `false`
+  - Clicking the "Denied" button updates the pending request in the database to `denied`, and updates the `available_for_adoption` status on the `pets` table to `true`
 
-### Review a Surrender Request
+### View All Adopted Pets
+
+```no-highlight
+As an admin
+I want to be able to see all adopted pets
+So I can see how my hard work has put wonderful animals into loving homes
+```
+
+- Create a new index page for animals which have been successfully adopted
+  - This should display animals of all types which have an `available_for_adoption` status of `false`
+
+### Edit Pets
 
 ```no-highlight
 As an employee of the adoption agency
-I want to have a form to review surrender applications
-So that I can determine if we can take the pet
+I want to be able to update a pet's information
+To better reflect who they are as I get to know them
 ```
 
-Acceptance Criteria
-
-- Create a form for an admin (using routes, not authentication) to approve or deny a request to list an animal for adoption
-  - Form submission updates the pending request in the database to `approved` or `denied`
-  - Form submission also creates an entry in the `adoptable_pets` table for the approved animal
-- When a request to list an animal is approved, that animal should then appear on the relevant Specific Pet-Type Index Page
+- On the pet's show page, there should be a button to "Edit This Pet"
+- Clicking the button takes me to `/pets/:id/edit`
+- This form has the same fields as my original "Surrender Pet" form
+- If the form is submitted successfully:
+  - The existing record should be updated in the `pets` table with the user's input.
+  - The user should be redirected back to the pet's show page.
+- If invalid input is submitted, the user should remain on the page and be presented with error messages pertaining to the empty fields.
+  - Optional: retain the information the user entered in the form
 
 ### Add a 404 error page
 
@@ -258,4 +263,4 @@ So that I know I have entered the url
 ```
 
 - If I navigate to a page like `"/petsLizards/5"` I should get a 404 page back.
-- If there is a pet type of `dogs` in the database, but there is only one dog with an `id` of 1 in the database, I should also get a 404 if I navigate to `"/pets/dogs/2"`, because there is no dog with an id of 2.
+- If I try to go to a pet type or pet that does not exist, I should also get a 404 page. E.g., if I navigate to `/pets/2200`, because there is no pet with an id of 2200. Same if I try to go to `/pet-types/55` when I don't have a pet type with the id of 55.
